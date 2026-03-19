@@ -4,31 +4,31 @@ GO
 USE DIY_SKILL_SHARING_APP
 GO
 
-CREATE TABLE Users (  -- USER superclass çünkü kullanýcý hem Mentör hem de öðrenci olabilir.
+CREATE TABLE Users (  -- USER superclass Ã§Ã¼nkÃ¼ kullanÃ½cÃ½ hem MentÃ¶r hem de Ã¶Ã°renci olabilir.
     UserID INT PRIMARY KEY IDENTITY(1,1),  -- id incremented by one after every user
     FirstName NVARCHAR(50) NOT NULL,
     LastName NVARCHAR(50) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
-    PasswordHash NVARCHAR(255) NOT NULL,  -- Þifre
-    CreatedAt DATETIME DEFAULT GETDATE(),  -- Oluþturulma tarihi
-    IsActive BIT DEFAULT 1,  -- Hala kullanýlýyor mu
-    BirthDate DATE  -- yaþ kýsýtlamasý için
+    PasswordHash NVARCHAR(255) NOT NULL,  -- Ãžifre
+    CreatedAt DATETIME DEFAULT GETDATE(),  -- OluÃ¾turulma tarihi
+    IsActive BIT DEFAULT 1,  -- Hala kullanÃ½lÃ½yor mu
+    BirthDate DATE  -- yaÃ¾ kÃ½sÃ½tlamasÃ½ iÃ§in
 );
 GO
 
-CREATE TABLE Mentors (   -- Userý subclass ý
-    MentorID INT PRIMARY KEY, -- UserID ile ayný olacak (1:1)
-    Bio NVARCHAR(MAX),  -- Mentör biyografisi
-    ExpertiseArea NVARCHAR(100),   -- Uzmanlýk alanlý ( verilen kurs )
-    IBAN NVARCHAR(34), -- Ödeme için iban
-    IsVerified BIT DEFAULT 0,   -- Mentör gerçekten iþinin ehli mi
-    CONSTRAINT FK_Mentors_Users FOREIGN KEY (MentorID) REFERENCES Users(UserID)  -- Mentörün ID si kend User Id si
+CREATE TABLE Mentors (   -- UserÃ½ subclass Ã½
+    MentorID INT PRIMARY KEY, -- UserID ile aynÃ½ olacak (1:1)
+    Bio NVARCHAR(MAX),  -- MentÃ¶r biyografisi
+    ExpertiseArea NVARCHAR(100),   -- UzmanlÃ½k alanlÃ½ ( verilen kurs )
+    IBAN NVARCHAR(34), -- Ã–deme iÃ§in iban
+    IsVerified BIT DEFAULT 0,   -- MentÃ¶r gerÃ§ekten iÃ¾inin ehli mi
+    CONSTRAINT FK_Mentors_Users FOREIGN KEY (MentorID) REFERENCES Users(UserID)  -- MentÃ¶rÃ¼n ID si kend User Id si
 );
 GO
 
-CREATE TABLE Learners (    -- Userý subclass ý
-    LearnerID INT PRIMARY KEY, -- UserID ile ayný olacak (1:1)
-    InterestLevel NVARCHAR(20) CHECK (Status IN ('Enrolled', 'Completed', 'Cancelled'),  -- Sadece Giriþ Orta ve Uzmanlýk seviyeleri
+CREATE TABLE Learners (    -- UserÃ½ subclass Ã½
+    LearnerID INT PRIMARY KEY, -- UserID ile aynÃ½ olacak (1:1)
+    InterestLevel NVARCHAR(20) CHECK (Status IN ('Enrolled', 'Completed', 'Cancelled'),  -- Sadece GiriÃ¾ Orta ve UzmanlÃ½k seviyeleri
     LearningGoals NVARCHAR(MAX), -- hedefler
     CONSTRAINT FK_Learners_Users FOREIGN KEY (LearnerID) REFERENCES Users(UserID)  -- LearnerID is UserID
 );
@@ -37,7 +37,7 @@ GO
 CREATE TABLE Categories (
     CategoryID INT PRIMARY KEY IDENTITY(1,1),  
     CategoryName NVARCHAR(50) NOT NULL,
-    Description NVARCHAR(255)  -- kategorinin açýklamasý
+    Description NVARCHAR(255)  -- kategorinin aÃ§Ã½klamasÃ½
 );
 GO
 
@@ -50,15 +50,15 @@ CREATE TABLE Skills (
 );
 GO
 
--- Yeni Tablo: KULLANICI YETENEKLERÝ
+-- Yeni Tablo: KULLANICI YETENEKLERÃ
 CREATE TABLE UserSkills (
     UserSkillID INT PRIMARY KEY IDENTITY(1,1),
     UserID INT NOT NULL,
     SkillID INT NOT NULL,
-    ProficiencyLevel NVARCHAR(20) DEFAULT 'Beginner', -- varsayýlan beginner
+    ProficiencyLevel NVARCHAR(20) DEFAULT 'Beginner', -- varsayÃ½lan beginner
     AcquiredDate DATETIME DEFAULT GETDATE(),
     
-    -- bir kiþi ayný yeteneðe iki kere sahip olamaz 
+    -- bir kiÃ¾i aynÃ½ yeteneÃ°e iki kere sahip olamaz 
     CONSTRAINT UQ_User_Skill UNIQUE (UserID, SkillID),
     
     CONSTRAINT FK_US_Users FOREIGN KEY (UserID) REFERENCES Users(UserID),
@@ -70,25 +70,25 @@ CREATE TABLE Workshops (
     WorkshopID INT PRIMARY KEY IDENTITY(1,1),
     Title NVARCHAR(100) NOT NULL,
     Description NVARCHAR(MAX),
-    Price DECIMAL(10, 2) CHECK (Price >= 0),  -- atölye ücreti
-    Capacity INT CHECK (Capacity > 0), -- atölyenin kapasitesi
+    Price DECIMAL(10, 2) CHECK (Price >= 0),  -- atÃ¶lye Ã¼creti
+    Capacity INT CHECK (Capacity > 0), -- atÃ¶lyenin kapasitesi
     WorkshopDate DATETIME NOT NULL,  -- tarihleri
     Location NVARCHAR(200),  -- konumu
-    MentorID INT NOT NULL,  -- mentörün id
+    MentorID INT NOT NULL,  -- mentÃ¶rÃ¼n id
     SkillID INT NOT NULL,
-    CONSTRAINT FK_Workshops_Mentors FOREIGN KEY (MentorID) REFERENCES Mentors(MentorID),  -- Workshop mentörü için mentör ID den al
-    CONSTRAINT FK_Workshops_Skills FOREIGN KEY (SkillID) REFERENCES Skills(SkillID)  -- Yetenek/Hobi için Skills ID den al
+    CONSTRAINT FK_Workshops_Mentors FOREIGN KEY (MentorID) REFERENCES Mentors(MentorID),  -- Workshop mentÃ¶rÃ¼ iÃ§in mentÃ¶r ID den al
+    CONSTRAINT FK_Workshops_Skills FOREIGN KEY (SkillID) REFERENCES Skills(SkillID)  -- Yetenek/Hobi iÃ§in Skills ID den al
 );
 GO
 
 
-CREATE TABLE Enrollments (   -- kayýtlar
+CREATE TABLE Enrollments (   -- kayÃ½tlar
     EnrollmentID INT PRIMARY KEY IDENTITY(1,1),
     WorkshopID INT NOT NULL,
     LearnerID INT NOT NULL,
-    EnrollmentDate DATETIME DEFAULT GETDATE(),   -- kayýt tarihi
-    Grade INT CHECK (Grade BETWEEN 0 AND 100),  -- sonuç 0 ve 100 arasýnda
-    Status NVARCHAR(20) DEFAULT 'Enrolled' CHECK (Status IN ('Enrolled', 'Completed', 'Cancelled', 'Failed')),  -- Dersteki kaydolma,tamamlanma,baþarýsýz ve iptal durumlarýný kontrol , varsayýlan kayýt olundu halindedir
+    EnrollmentDate DATETIME DEFAULT GETDATE(),   -- kayÃ½t tarihi
+    Grade INT CHECK (Grade BETWEEN 0 AND 100),  -- sonuÃ§ 0 ve 100 arasÃ½nda
+    Status NVARCHAR(20) DEFAULT 'Enrolled' CHECK (Status IN ('Enrolled', 'Completed', 'Cancelled', 'Failed')),  -- Dersteki kaydolma,tamamlanma,baÃ¾arÃ½sÃ½z ve iptal durumlarÃ½nÃ½ kontrol , varsayÃ½lan kayÃ½t olundu halindedir
     CONSTRAINT FK_Enrollments_Workshops FOREIGN KEY (WorkshopID) REFERENCES Workshops(WorkshopID),
     CONSTRAINT FK_Enrollments_Learners FOREIGN KEY (LearnerID) REFERENCES Learners(LearnerID)
 );
@@ -106,7 +106,7 @@ CREATE TABLE Badges (
     BadgeID INT PRIMARY KEY IDENTITY(1,1),
     BadgeName NVARCHAR(50) NOT NULL,
     Description NVARCHAR(200),
-    RequiredWorkshops INT   -- Rozeti kazanmak için kaç ders bitirilmeli
+    RequiredWorkshops INT   -- Rozeti kazanmak iÃ§in kaÃ§ ders bitirilmeli
 );
 GO
 
@@ -116,7 +116,7 @@ CREATE TABLE Reviews (
     LearnerID INT NOT NULL,
     Rating INT CHECK (Rating BETWEEN 1 AND 5),  -- derecelendirme
     Comment NVARCHAR(MAX),  -- yorum
-    CreatedAt DATETIME DEFAULT GETDATE(),  -- oluþturulma tarihi
+    CreatedAt DATETIME DEFAULT GETDATE(),  -- oluÃ¾turulma tarihi
     CONSTRAINT FK_Reviews_Workshops FOREIGN KEY (WorkshopID) REFERENCES Workshops(WorkshopID),
     CONSTRAINT FK_Reviews_Learners FOREIGN KEY (LearnerID) REFERENCES Learners(LearnerID)
 );
@@ -132,11 +132,11 @@ CREATE TABLE WorkshopMaterials (
 );
 GO
 
-CREATE TABLE Waitlist (   -- kapasiteden dolayý kayýt bekleyen öðrenciler
+CREATE TABLE Waitlist (   -- kapasiteden dolayÃ½ kayÃ½t bekleyen Ã¶Ã°renciler
     WaitlistID INT PRIMARY KEY IDENTITY(1,1),
     WorkshopID INT NOT NULL,
     LearnerID INT NOT NULL,
-    RequestDate DATETIME DEFAULT GETDATE(),  -- kayýt için request tarihi
+    RequestDate DATETIME DEFAULT GETDATE(),  -- kayÃ½t iÃ§in request tarihi
     CONSTRAINT FK_Waitlist_Workshops FOREIGN KEY (WorkshopID) REFERENCES Workshops(WorkshopID),
     CONSTRAINT FK_Waitlist_Learners FOREIGN KEY (LearnerID) REFERENCES Learners(LearnerID)
 );
