@@ -22,12 +22,12 @@ The system consists of tables normalized up to **3NF (Third Normal Form)**, effe
 
 *(Conceptual relationships between Mentors, Learners, Workshops, and Skills)*
 
-<img width="1920" height="1080" alt="Feature Importance" src="📁 Docs/ER DIAGRAM.jpg" />
+<img width="1920" height="1080" alt="er diagram" src="📁 Docs/ER DIAGRAM.jpg" />
 
 ### Relational Schema
 *(Table structures, Primary Key (PK), and Foreign Key (FK) constraints)*
 
-<img width="1920" height="1080" alt="Feature Importance" src="📁 Docs/RELATIONAL SCHEMA.jpg" />
+<img width="1920" height="1080" alt="relational schema" src="📁 Docs/RELATIONAL SCHEMA.jpg" />
 
 
 ##  <h2> Folder Structure & Installation </h2>
